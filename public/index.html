@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini Browser</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #controls {
+      padding: 10px;
+      background-color: #f0f0f0;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    #url {
+      flex: 1;
+      padding: 5px;
+      font-size: 16px;
+    }
+    #browser {
+      width: 100%;
+      height: calc(100% - 60px);
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <input type="text" id="url" placeholder="Enter URL">
+    <button onclick="loadPage()">Go</button>
+  </div>
+  <iframe id="browser"></iframe>
+
+  <script>
+    async function loadPage() {
+      const url = document.getElementById('url').value;
+      if (!url) return alert("Enter a URL!");
+      const iframe = document.getElementById('browser');
+
+      try {
+        const response = await fetch(`/proxy?url=${encodeURIComponent(url)}`);
+        const html = await response.text();
+        iframe.srcdoc = html;
+      } catch (err) {
+        iframe.srcdoc = `<p style="color:red;">Error: ${err}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
